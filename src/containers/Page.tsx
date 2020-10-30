@@ -10,7 +10,8 @@ const Page = (props: any) => {
     <Layout>
       <Header/>
       <Content style={{margin: '24px 16px 0'}}>
-        <div className="site-layout-background" style={{padding: 24, minHeight: 430}}>
+        <div className="site-layout-background">
+          <h1>Finding Falcone</h1>
           {props.children}
         </div>
       </Content>

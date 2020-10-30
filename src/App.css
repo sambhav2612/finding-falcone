@@ -8,5 +8,9 @@
 }
 
 .site-layout-background {
+    margin-top: 64px;
+    padding: 64px 24px 0;
+    min-height: 430px;
     background: #fff !important;
+    text-align: center;
 }
