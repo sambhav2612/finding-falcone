@@ -1,25 +1,60 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {ReactNode} from 'react';
 import './App.css';
+import 'antd/dist/antd.css';
+import {BrowserRouter, Redirect, Route, Switch} from 'react-router-dom';
+import {isAuthenticated} from "./utils/methods";
+
+import Home from "./containers/Home";
+import Result from "./containers/Result";
+import Login from "./containers/Login";
+
+interface IProps {
+  children: ReactNode;
+  exact: boolean;
+  path: string | string[];
+  // any other props that come into the component
+}
+
+function PrivateRoute({children, ...props}: IProps) {
+  return (
+    <Route
+      {...props}
+      render={({location}) =>
+        isAuthenticated() ? (
+          children
+        ) : (
+          <Redirect
+            to={{
+              pathname: "/login",
+              state: {from: location}
+            }}
+          />
+        )
+      }
+    />
+  );
+}
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <div className="App">
+        <Switch>
+          <Route exact path={["/"]}>
+            <Redirect to={isAuthenticated() ? "/home" : "/login"}/>
+          </Route>
+          <Route exact path="/login">
+            <Login/>
+          </Route>
+          <PrivateRoute exact path="/home">
+            <Home/>
+          </PrivateRoute>
+          <PrivateRoute exact path="/result">
+            <Result/>
+          </PrivateRoute>
+        </Switch>
+      </div>
+    </BrowserRouter>
   );
 }
 
