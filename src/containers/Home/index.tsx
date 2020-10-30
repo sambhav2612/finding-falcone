@@ -1,9 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import Page from "../Page";
 import {getPlanets, getVehicles} from "../../utils/methods";
-import {Button, message, Transfer} from "antd";
+import {Button, message, Row, Col, Transfer, Card} from "antd";
+import Vehicle from "../../components/Vehicle";
 
 const Home = () => {
+  const [confirmed, setConfirmed] = useState<boolean>(false);
   const [selectedKeys, setSelectedKeys] = useState<Array<object>>([]);
   const [targetKeys, setTargetKeys] = useState<Array<object>>([]);
   const [planets, setPlanets] = useState<Array<object>>([]);
@@ -22,11 +24,16 @@ const Home = () => {
       const vehiclesCopy = Array.from(await getVehicles());
       vehiclesCopy.forEach((value: any) => {
         value['key'] = value['name'];
+        value['confirmed'] = false;
+        value['added'] = -1;
       });
       // @ts-ignore
       setVehicles(vehiclesCopy);
     })();
   }, []);
+
+  // @ts-ignore
+  const forceUpdate: () => void = React.useState()[1].bind(null, {})
 
   const handleChange = (nextTargetKeys: any) => {
     if (nextTargetKeys.length <= 4) {
@@ -43,30 +50,63 @@ const Home = () => {
 
   const renderFooter = (props: any) => {
     return props?.titleText === 'Selected' &&
-        <Button size="small" type="primary" disabled={props?.dataSource?.length !== 4}
-                style={{float: 'right', margin: 5}}>
+        <Button size="small" type="primary" disabled={props?.dataSource?.length !== 4 || confirmed}
+                style={{float: 'right', margin: 5}} onClick={e => setConfirmed(true)}>
           Confirm
         </Button>
   };
 
+  const confirmVehicle = (key: string, value: number) => {
+    vehicles.forEach(vehicle => {
+      // @ts-ignore
+      if (vehicle['name'] === key) {
+        // @ts-ignore
+        vehicle['confirmed'] = true;
+        // @ts-ignore
+        vehicle['added'] = value;
+      }
+    });
+    setVehicles(vehicles);
+    forceUpdate();
+  };
+
+  const confirmedCount = vehicles.reduce((a, b) => {
+    // @ts-ignore
+    return a && b['confirmed'];
+  }, true);
+
   return (
     <Page>
-      <Transfer
-        showSelectAll={false}
-        // @ts-ignore
-        dataSource={planets || []}
-        titles={['Available', 'Selected']}
-        // @ts-ignore
-        targetKeys={targetKeys || []}
-        // @ts-ignore
-        selectedKeys={selectedKeys || []}
-        render={item => `${item.name} (Distance: ${item.distance})`}
-        onChange={handleChange}
-        onSelectChange={handleSelectChange}
-        style={{marginTop: 20}}
-        listStyle={{width: 200, height: 300}}
-        footer={renderFooter}
-      />
+      <Row gutter={16} style={{alignItems: 'center'}}>
+        <Col span={12}>
+          <Card title="Select Planets" style={{height: 450, marginTop: 20}}>
+            <Transfer
+              showSelectAll={false}
+              disabled={confirmed}
+              // @ts-ignore
+              dataSource={planets || []}
+              titles={['Available', 'Selected']}
+              // @ts-ignore
+              targetKeys={targetKeys || []}
+              // @ts-ignore
+              selectedKeys={selectedKeys || []}
+              render={item => `${item.name} (Distance: ${item.distance})`}
+              onChange={handleChange}
+              onSelectChange={handleSelectChange}
+              listStyle={{width: 200, height: 350}}
+              footer={renderFooter}
+            />
+          </Card>
+        </Col>
+        {confirmed && <Col span={12}>
+          <Card title="Select Vehicle and Quantities" style={{height: 450, marginTop: 20}}>
+            {vehicles?.length && vehicles.map(vehicle => <Vehicle data={vehicle} confirmVehicle={confirmVehicle}/>)}
+          </Card>
+        </Col>}
+      </Row>
+      <Row style={{marginTop: 30}}>
+        <Button type="primary" size="large" block disabled={!confirmedCount}>Go!</Button>
+      </Row>
     </Page>
   );
 };
