@@ -1,5 +1,4 @@
 import axios from './Api';
-import {message} from "antd";
 
 export const isAuthenticated = () => {
   return localStorage.getItem('__ACCESS_TOKEN');
@@ -20,11 +19,10 @@ export const getVehicles = async () => {
 
 export const find = async (payload) => {
   const response = (await axios.post('find', payload))?.data;
-  console.log(response);
   if (response?.status === "success") {
-    window.location.replace(`/result?planet=${response?.planet_name}&status=${response?.status}`)
+    window.location.replace(`/result?planet=${response?.planet_name}&status=success`)
   } else {
-    window.location.replace(`/result?error=${response?.error}status=failure`)
+    window.location.replace(`/result?error=${response?.error}&status=error`)
   }
 }
 
