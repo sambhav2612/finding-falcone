@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import Page from "../Page";
-import {getPlanets, getVehicles} from "../../utils/methods";
+import {getPlanets, getVehicles, find, isAuthenticated} from "../../utils/methods";
 import {Button, message, Row, Col, Transfer, Card} from "antd";
 import Vehicle from "../../components/Vehicle";
 
@@ -63,17 +63,42 @@ const Home = () => {
         // @ts-ignore
         vehicle['confirmed'] = true;
         // @ts-ignore
-        vehicle['added'] = value;
+        vehicle['added'] = Number(value);
       }
     });
     setVehicles(vehicles);
     forceUpdate();
   };
 
-  const confirmedCount = vehicles.reduce((a, b) => {
-    // @ts-ignore
+  const getResult = async (e: any) => {
+    e.preventDefault();
+    const payload = {
+      token: isAuthenticated(),
+      planet_names: targetKeys,
+      vehicle_names: []
+    };
+    vehicles.filter((vehicle: any) => {
+      return vehicle.confirmed && vehicle.added;
+    }).map((vehicle: any) => {
+      for (let i = 0; i < vehicle.added; i++) {
+        // @ts-ignore
+        payload.vehicle_names.push(vehicle.name);
+      }
+      return 0;
+    });
+
+    await find(payload);
+  }
+
+  const confirmedCount = vehicles.reduce((a, b: any) => {
     return a && b['confirmed'];
   }, true);
+
+  const timeTaken = vehicles.filter((vehicle: any) => {
+    return vehicle.confirmed && vehicle.added;
+  }).reduce((a, b: any) => {
+    return a + Number(b.max_distance / b.speed) * Number(b.added);
+  }, 0);
 
   return (
     <Page>
@@ -99,13 +124,13 @@ const Home = () => {
           </Card>
         </Col>
         {confirmed && <Col span={12}>
-          <Card title="Select Vehicle and Quantities" style={{height: 450, marginTop: 20}}>
+          <Card title={`Select Vehicle and Quantities | Time Taken: ${timeTaken}`} style={{height: 450, marginTop: 20}}>
             {vehicles?.length && vehicles.map(vehicle => <Vehicle data={vehicle} confirmVehicle={confirmVehicle}/>)}
           </Card>
         </Col>}
       </Row>
       <Row style={{marginTop: 30}}>
-        <Button type="primary" size="large" block disabled={!confirmedCount}>Go!</Button>
+        <Button type="primary" size="large" block disabled={!confirmedCount} onClick={getResult}>Go!</Button>
       </Row>
     </Page>
   );
