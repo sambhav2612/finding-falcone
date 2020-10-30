@@ -1,8 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {useHistory, useLocation} from "react-router-dom";
-import {Menu, Popconfirm} from 'antd';
+import {Layout, Menu, Popconfirm} from 'antd';
 import {DoubleRightOutlined, HomeOutlined, SettingOutlined} from '@ant-design/icons';
 import {isAuthenticated} from "../../utils/methods";
+
+const {Header: AntHeader} = Layout;
 
 const Header = () => {
   const history = useHistory();
@@ -34,7 +36,7 @@ const Header = () => {
   }
 
   return (
-    <div className="header">
+    <AntHeader className="site-layout-sub-header-background">
       <Menu onClick={handleKey} selectedKeys={[tab.toString()]} mode="horizontal">
         {!loggedIn && <Menu.Item key="login" icon={<SettingOutlined/>}>
           Login
@@ -56,7 +58,7 @@ const Header = () => {
           </Popconfirm>
         </Menu.Item>}
       </Menu>
-    </div>
+    </AntHeader>
   );
 }
 
