@@ -96,19 +96,11 @@ const Home = () => {
     }
   }
 
-  const confirmedCount = vehicles.reduce((a, b: any) => {
-    return a && b['confirmed'];
-  }, true);
-
+  const confirmedCount = vehicles.reduce((a, b: any) => a && b['confirmed'], true);
   const confirmedSum = vehicles.filter((vehicle: any) => vehicle.confirmed)
-    .reduce((a, b: any) => {
-      return a + b['added'];
-    }, 0);
-
+    .reduce((a, b: any) => a + b['added'], 0);
   const timeTaken = vehicles.filter((vehicle: any) => vehicle.confirmed && vehicle.added)
-    .reduce((a, b: any) => {
-      return a + Number(b.max_distance / b.speed) * Number(b.added);
-    }, 0);
+    .reduce((a, b: any) => a + Number(b.max_distance / b.speed) * Number(b.added), 0);
 
   return (
     <Page>
@@ -134,7 +126,8 @@ const Home = () => {
           </Card>
         </Col>
         {confirmed && <Col span={12}>
-          <Card title={`Select Vehicle and Quantities | Time Taken: ${timeTaken}`} style={{height: 450, marginTop: 20}}>
+          <Card title={`Select Vehicle and Quantities | Time Taken: ${Number(Number(timeTaken) / 60).toFixed(2)} hrs`}
+                style={{height: 450, marginTop: 20}}>
             {vehicles?.length && vehicles.map(vehicle => <Vehicle data={vehicle} confirmVehicle={confirmVehicle}/>)}
           </Card>
         </Col>}
