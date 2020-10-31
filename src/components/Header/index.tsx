@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useHistory, useLocation} from "react-router-dom";
-import {Layout, Menu, Popconfirm} from 'antd';
+import {Button, Layout, Menu, message} from 'antd';
 import {DoubleRightOutlined, HomeOutlined, SettingOutlined} from '@ant-design/icons';
 import {isAuthenticated} from "../../utils/methods";
 
@@ -29,9 +29,9 @@ const Header = () => {
     history.push(e.key);
   }
 
-  const logout = (e: any) => {
-    e.preventDefault();
+  const logout = () => {
     localStorage.clear();
+    message.success('Successfully logged out!');
     history.push('/login');
   }
 
@@ -47,15 +47,8 @@ const Header = () => {
         <Menu.Item key="result" icon={<DoubleRightOutlined/>}>
           Result
         </Menu.Item>
-        {loggedIn && <Menu.Item key="logout">
-          <Popconfirm
-              title="Are you sure you want to logout?"
-              onConfirm={logout}
-              okText="Yes"
-              cancelText="No"
-          >
-            <a href="#">Logout</a>
-          </Popconfirm>
+        {loggedIn && <Menu.Item disabled>
+          <Button onClick={logout}>Logout</Button>
         </Menu.Item>}
       </Menu>
     </AntHeader>

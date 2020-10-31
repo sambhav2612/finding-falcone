@@ -2,7 +2,7 @@
   "name": "finding-falcone",
   "version": "0.0.1",
   "private": false,
-  "homepage": "https://sambhav2612.github.io/finding-falcone",
+  "homepage": ".",
   "dependencies": {
     "@ant-design/icons": "^4.2.2",
     "@testing-library/jest-dom": "^5.11.5",
@@ -32,7 +32,7 @@
     "start": "cross-env NODE_ENV=development react-scripts start",
     "predeploy": "npm run build",
     "deploy": "gh-pages -b master -d build",
-    "build": "cross-env NODE_ENV=production GENERATE_SOURCEMAP=false react-scripts build",
+    "build": "cross-env NODE_ENV=production GENERATE_SOURCEMAP=false PUBLIC_URL=https://sambhav2612.github.io/finding-falcone react-scripts build",
     "test": "cross-env NODE_ENV=development react-scripts test",
     "eject": "react-scripts eject"
   },
