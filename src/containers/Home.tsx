@@ -57,12 +57,9 @@ const Home = () => {
   };
 
   const confirmVehicle = (key: string, value: number) => {
-    vehicles.forEach(vehicle => {
-      // @ts-ignore
+    vehicles.forEach((vehicle: any) => {
       if (vehicle['name'] === key) {
-        // @ts-ignore
         vehicle['confirmed'] = true;
-        // @ts-ignore
         vehicle['added'] = Number(value);
       }
     });
@@ -72,33 +69,46 @@ const Home = () => {
 
   const getResult = async (e: any) => {
     e.preventDefault();
-    const payload = {
-      token: isAuthenticated(),
-      planet_names: targetKeys,
-      vehicle_names: []
-    };
-    vehicles.filter((vehicle: any) => {
-      return vehicle.confirmed && vehicle.added;
-    }).map((vehicle: any) => {
-      for (let i = 0; i < vehicle.added; i++) {
-        // @ts-ignore
-        payload.vehicle_names.push(vehicle.name);
-      }
-      return 0;
-    });
+    if (confirmedSum === 4) {
+      const payload = {
+        token: isAuthenticated(),
+        planet_names: targetKeys,
+        vehicle_names: []
+      };
+      vehicles.filter((vehicle: any) => vehicle.confirmed && vehicle.added)
+        .map((vehicle: any) => {
+          for (let i = 0; i < vehicle.added; i++) {
+            // @ts-ignore
+            payload.vehicle_names.push(vehicle.name);
+          }
+          return 0;
+        });
 
-    await find(payload);
+      await find(payload);
+    } else {
+      message.error('Total vehicle count needs to be 4!');
+      vehicles.forEach((vehicle: any) => {
+        vehicle['confirmed'] = false;
+        vehicle['added'] = -1;
+      });
+      setVehicles(vehicles);
+      forceUpdate();
+    }
   }
 
   const confirmedCount = vehicles.reduce((a, b: any) => {
     return a && b['confirmed'];
   }, true);
 
-  const timeTaken = vehicles.filter((vehicle: any) => {
-    return vehicle.confirmed && vehicle.added;
-  }).reduce((a, b: any) => {
-    return a + Number(b.max_distance / b.speed) * Number(b.added);
-  }, 0);
+  const confirmedSum = vehicles.filter((vehicle: any) => vehicle.confirmed)
+    .reduce((a, b: any) => {
+      return a + b['added'];
+    }, 0);
+
+  const timeTaken = vehicles.filter((vehicle: any) => vehicle.confirmed && vehicle.added)
+    .reduce((a, b: any) => {
+      return a + Number(b.max_distance / b.speed) * Number(b.added);
+    }, 0);
 
   return (
     <Page>
