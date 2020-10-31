@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import Page from "../Page";
-import {getPlanets, getVehicles, find, isAuthenticated} from "../../utils/methods";
+import Page from "./Page";
+import {getPlanets, getVehicles, find, isAuthenticated} from "../utils/methods";
 import {Button, message, Row, Col, Transfer, Card} from "antd";
-import Vehicle from "../../components/Vehicle";
+import Vehicle from "../components/Vehicle";
 
 const Home = () => {
   const [confirmed, setConfirmed] = useState<boolean>(false);

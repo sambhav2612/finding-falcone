@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useHistory, useLocation} from "react-router-dom";
 import {Button, Layout, Menu, message} from 'antd';
 import {DoubleRightOutlined, HomeOutlined, SettingOutlined} from '@ant-design/icons';
-import {isAuthenticated} from "../../utils/methods";
+import {isAuthenticated} from "../utils/methods";
 
 const {Header: AntHeader} = Layout;
 

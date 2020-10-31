@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {useHistory, useLocation} from 'react-router-dom'
-import Page from "../Page";
+import Page from "./Page";
 import {Result as AntResult, Button, message} from "antd";
 
 const queryString = require('query-string');

@@ -1,7 +1,7 @@
 import React from 'react';
 import {useHistory} from 'react-router-dom';
-import Page from "../Page";
-import {getToken, isAuthenticated} from "../../utils/methods";
+import Page from "./Page";
+import {getToken, isAuthenticated} from "../utils/methods";
 import {Button, message} from "antd";
 
 const Login = () => {
