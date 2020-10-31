@@ -1,24 +1,24 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {useHistory} from 'react-router-dom';
 import Page from "../Page";
 import {getToken, isAuthenticated} from "../../utils/methods";
-import {message} from "antd";
+import {Button, message} from "antd";
 
 const Login = () => {
   const history = useHistory();
-  useEffect(() => {
+
+  const login = async (e: any) => {
+    e.preventDefault();
     if (!isAuthenticated()) {
-      (async () => {
-        await getToken();
-        message.success(' Successfully generated API token!');
-        history.push('home');
-      })();
+      await getToken();
+      message.success('Successfully logged in!');
+      history.push('home');
     }
-  }, []);
+  }
 
   return (
     <Page>
-
+      <Button type="primary" size="large" onClick={login} style={{marginTop: 20}}>Login</Button>
     </Page>
   );
 };

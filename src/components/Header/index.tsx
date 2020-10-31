@@ -30,9 +30,11 @@ const Header = () => {
   }
 
   const logout = () => {
-    localStorage.clear();
-    message.success('Successfully logged out!');
-    history.push('/login');
+    if (window?.confirm('Are you sure you want to logout?')) {
+      localStorage.clear();
+      message.success('Successfully logged out!');
+      history.push('/login');
+    }
   }
 
   return (
@@ -44,12 +46,14 @@ const Header = () => {
         <Menu.Item key="home" icon={<HomeOutlined/>}>
           Home
         </Menu.Item>
-        <Menu.Item key="result" icon={<DoubleRightOutlined/>}>
-          Result
-        </Menu.Item>
-        {loggedIn && <Menu.Item disabled>
-          <Button onClick={logout}>Logout</Button>
-        </Menu.Item>}
+        {loggedIn && <>
+          <Menu.Item key="result" icon={<DoubleRightOutlined/>}>
+            Result
+          </Menu.Item>
+          <Menu.Item disabled style={{float: 'right'}}>
+            <Button type="primary" onClick={logout}>Logout</Button>
+          </Menu.Item>
+        </>}
       </Menu>
     </AntHeader>
   );
