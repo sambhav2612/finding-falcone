@@ -20,7 +20,7 @@ const Result = () => {
     <Page>
       <AntResult
         status={parsed?.status}
-        title={`${parsed?.status === 'error' && "No "}Match Found!`}
+        title={`${parsed?.status === 'error' ? "No " : ""}Match Found!`}
         subTitle={parsed?.status === 'error' ? "Please check and modify the information before resubmitting." : `Planet Name is: ${parsed?.planet}`}
         extra={[
           <Button type="primary" key="try-again" onClick={e => history.replace('/home')}>Try Again</Button>,
